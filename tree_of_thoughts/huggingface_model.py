@@ -77,22 +77,18 @@ class HuggingLanguageModel:
             Devise the best possible solution for the task: {initial_prompt}, Here are evaluated solutions that were rejected: 
             ###{rejected_solutions}###, 
             complete the {initial_prompt} without making the same mistakes you did with the evaluated rejected solutions. Be simple. Be direct. Provide intuitive solutions as soon as you think of them."""
-            answer = self.generate_text(prompt, 1)
-            print(f"Answerrrrrr {answer}")
-            # print(thoughts)
-            # print(f"General Solution : {answer}")
-            return answer
+            return prompt
         except Exception as e:
             logger.error(f"Error in generate_solutions: {e}")
             return None
 
-    def generate_text(self, prompt: str, k: int = 3):
-        """Generate text from prompt using OpenAI API"""
-        if self.use_chat_api:
-            thoughts = []
-            for _ in range(k):
-                response = self.model(prompt)
-                thoughts += [response]
-                # print(f'thoughts: {thoughts}')
-            return thoughts
+    # def generate_text(self, prompt: str, k: int = 3):
+    #     """Generate text from prompt using OpenAI API"""
+    #     if self.use_chat_api:
+    #         thoughts = []
+    #         for _ in range(k):
+    #             response = self.model(prompt)
+    #             thoughts += [response]
+    #             # print(f'thoughts: {thoughts}')
+    #         return thoughts
 
