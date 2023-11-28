@@ -7,6 +7,7 @@ class HuggingLanguageModel:
     ):
         self.model = HuggingfaceLLM(model_name, *args, **kwargs)
         self.verbose = verbose
+        self.use_chat_api = True
 
     def generate_thoughts(self, state, k, max_length=100):
         state_text = " ".join(state)
@@ -84,3 +85,14 @@ class HuggingLanguageModel:
         except Exception as e:
             logger.error(f"Error in generate_solutions: {e}")
             return None
+
+    def generate_text(self, prompt: str, k: int = 3):
+        """Generate text from prompt using OpenAI API"""
+        if self.use_chat_api:
+            thoughts = []
+            for _ in range(k):
+                response = self.model(prompt)
+                thoughts += [response]
+                # print(f'thoughts: {thoughts}')
+            return thoughts
+
