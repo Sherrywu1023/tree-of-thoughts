@@ -504,7 +504,7 @@ class MonteCarloTreeofThoughts(TreeofThoughts):
 
         # return None
         print("\n\n\n\n\n\n\n\n\n\n\n")
-        print(best_state)
+        print("Best State:", best_state)
         print("\n\n\n\n\n\n\n\n\n\n\n")
         solution = self.model.generate_solution(initial_prompt, best_state)
         return solution if solution else best_state

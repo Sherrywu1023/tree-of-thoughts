@@ -45,6 +45,7 @@ class OpenAILanguageModel(AbstractLanguageModel):
         self.enable_ReAct_prompting = enable_ReAct_prompting
         self.strategy = strategy
         self.evaluation_strategy = evaluation_strategy
+        self.verbose = True
 
         # reference : https://www.promptingguide.ai/techniques/react
         self.ReAct_prompt = ""
@@ -146,41 +147,63 @@ class OpenAILanguageModel(AbstractLanguageModel):
                     If the solutions is not directly concretely making fast progress in achieving the goal, give it a lower score.
                     Evaluate all solutions AS A FLOAT BETWEEN 0 and 1:\n,  DO NOT RETURN ANYTHING ELSE
                 """
+                if self.verbose:
+                    print(f"Evaluating state: {state_text}")
 
-                response = self.openai_api_call_handler(prompt, 10, 1)
                 try:
-                    value_text = self.openai_choice2text_handler(
-                        response.choices[0]
-                    )
-                    # print(f'state: {value_text}')
+                    value_text = self.model(prompt)
                     value = float(value_text)
-                    print(f"Evaluated Thought Value: {value}")
                 except ValueError:
+                    if self.verbose:
+                        print(
+                            "Error converting value to float for state:"
+                            f" {state_text}"
+                        )
                     value = 0  # Assign a default value if the conversion fails
+                except Exception as e:
+                    if self.verbose:
+                        print(f"Error evaluating state: {state_text}")
+                        print(f"Error: {e}")
+                    value = 0
+
                 state_values[state] = value
+
             return state_values
 
-        elif self.evaluation_strategy == "vote":
-            states_text = "\n".join([" ".join(state) for state in states])
-            prompt = (
-                "Given the following states of reasoning, vote for the best"
-                " state utilizing an scalar value"
-                f" 1-10:\n{states_text}\n\nVote, on the probability of this"
-                f" state of reasoning achieveing {initial_prompt} and become"
-                " very pessimistic very NOTHING ELSE"
-            )
-            response = self.openai_api_call_handler(prompt, 50, 1)
-            print(f"state response: {response}")
-            best_state_text = self.openai_choice2text_handler(
-                response.choices[0]
-            )
-            print(f"Best state text: {best_state_text}")
-            best_state = tuple(best_state_text.split())
-            print(f"best_state: {best_state}")
+                # response = self.openai_api_call_handler(prompt, 10, 1)
+                # try:
+                #     value_text = self.openai_choice2text_handler(
+                #         response.choices[0]
+                #     )
+                #     # print(f'state: {value_text}')
+                #     value = float(value_text)
+                #     print(f"Evaluated Thought Value: {value}")
+                # except ValueError:
+            #     value = 0  # Assign a default value if the conversion fails
+            #     state_values[state] = value
+            # return state_values
 
-            return {state: 1 if state == best_state else 0 for state in states}
+        # elif self.evaluation_strategy == "vote":
+        #     states_text = "\n".join([" ".join(state) for state in states])
+        #     prompt = (
+        #         "Given the following states of reasoning, vote for the best"
+        #         " state utilizing an scalar value"
+        #         f" 1-10:\n{states_text}\n\nVote, on the probability of this"
+        #         f" state of reasoning achieveing {initial_prompt} and become"
+        #         " very pessimistic very NOTHING ELSE"
+        #     )
+        #     response = self.openai_api_call_handler(prompt, 50, 1)
+        #     print(f"state response: {response}")
+        #     best_state_text = self.openai_choice2text_handler(
+        #         response.choices[0]
+        #     )
+        #     print(f"Best state text: {best_state_text}")
+        #     best_state = tuple(best_state_text.split())
+        #     print(f"best_state: {best_state}")
 
-        else:
-            raise ValueError(
-                "Invalid evaluation strategy. Choose 'value' or 'vote'."
-            )
+        #     return {state: 1 if state == best_state else 0 for state in states}
+
+        # else:
+        #     raise ValueError(
+        #         "Invalid evaluation strategy. Choose 'value' or 'vote'."
+        #     )
