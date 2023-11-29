@@ -441,26 +441,17 @@ class MonteCarloTreeofThoughts(TreeofThoughts):
             selected_states = []
 
             for state in current_states:
-                if state in transposition_table:
-                    transposition_table[state]
-                else:
-                    time.sleep(1)
-                    thoughts = self.model.generate_thoughts(
-                        state, num_thoughts, initial_prompt
-                    )
-                    time.sleep(1)
-                    evaluated_thoughts = self.model.evaluate_states(
-                        thoughts, initial_prompt
-                    )
-
-                    for thought, value in evaluated_thoughts.items():
-                        flattened_state = (
-                            (state, thought)
-                            if isinstance(state, str)
-                            else (*state, thought)
-                        )
-                        print("VALUE IS:", str(value))
-                        transposition_table[flattened_state] = value
+                # if state in transposition_table:
+                #     transposition_table[state]
+                # else:
+                time.sleep(1)
+                thoughts = self.model.generate_thoughts(
+                    state, num_thoughts, initial_prompt
+                )
+                time.sleep(1)
+                evaluated_thoughts = self.model.evaluate_states(
+                    thoughts, initial_prompt
+                )
 
                 for thought, value in evaluated_thoughts.items():
                     flattened_state = (
@@ -468,6 +459,15 @@ class MonteCarloTreeofThoughts(TreeofThoughts):
                         if isinstance(state, str)
                         else (*state, thought)
                     )
+                    print("VALUE IS:", str(value))
+                    # transposition_table[flattened_state] = value
+
+                # for thought, value in evaluated_thoughts.items():
+                #     flattened_state = (
+                #         (state, thought)
+                #         if isinstance(state, str)
+                #         else (*state, thought)
+                #     )
                     print("FLATTENED STATE IS",str(flattened_state))
                     if flattened_state not in visit_counts:
                         visit_counts[flattened_state] = 0
