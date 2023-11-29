@@ -448,18 +448,19 @@ class MonteCarloTreeofThoughts(TreeofThoughts):
                 thoughts = self.model.generate_thoughts(
                     state, num_thoughts, initial_prompt
                 )
-                time.sleep(1)
-                evaluated_thoughts = self.model.evaluate_states(
-                    thoughts, initial_prompt
-                )
+                print(thoughts)
+                # time.sleep(1)
+                # evaluated_thoughts = self.model.evaluate_states(
+                #     thoughts, initial_prompt
+                # )
 
-                for thought, value in evaluated_thoughts.items():
-                    flattened_state = (
-                        (state, thought)
-                        if isinstance(state, str)
-                        else (*state, thought)
-                    )
-                    print("VALUE IS:", str(value))
+                # for thought, value in evaluated_thoughts.items():
+                #     flattened_state = (
+                #         (state, thought)
+                #         if isinstance(state, str)
+                #         else (*state, thought)
+                #     )
+                #     print("VALUE IS:", str(value))
                     # transposition_table[flattened_state] = value
 
                 # for thought, value in evaluated_thoughts.items():
@@ -468,34 +469,34 @@ class MonteCarloTreeofThoughts(TreeofThoughts):
                 #         if isinstance(state, str)
                 #         else (*state, thought)
                 #     )
-                    print("FLATTENED STATE IS",str(flattened_state))
-                    if flattened_state not in visit_counts:
-                        visit_counts[flattened_state] = 0
+            #         print("FLATTENED STATE IS",str(flattened_state))
+            #         if flattened_state not in visit_counts:
+            #             visit_counts[flattened_state] = 0
 
-                    if (
-                        visit_counts[state] > visit_counts[flattened_state]
-                        and visit_counts[flattened_state] > 0
-                    ):
-                        ucb1_value = value + np.sqrt(
-                            2
-                            * np.log(visit_counts[state])
-                            / visit_counts[flattened_state]
-                        )
+            #         if (
+            #             visit_counts[state] > visit_counts[flattened_state]
+            #             and visit_counts[flattened_state] > 0
+            #         ):
+            #             ucb1_value = value + np.sqrt(
+            #                 2
+            #                 * np.log(visit_counts[state])
+            #                 / visit_counts[flattened_state]
+            #             )
 
-                        if ucb1_value >= pruning_threshold:
-                            selected_states.append(flattened_state)
-                            state_values[flattened_state] = value
+            #             if ucb1_value >= pruning_threshold:
+            #                 selected_states.append(flattened_state)
+            #                 state_values[flattened_state] = value
 
-                            # Update the best state if the current state value is greater than the best value
-                            if value > best_value:
-                                best_state = flattened_state
-                                best_value = value
+            #                 # Update the best state if the current state value is greater than the best value
+            #                 if value > best_value:
+            #                     best_state = flattened_state
+            #                     best_value = value
 
-                visit_counts[state] += 1
+            #     visit_counts[state] += 1
 
-            if len(selected_states) > max_states:
-                current_states = selected_states[:max_states]
-            self.save_tree_to_json(self.file_name)
+            # if len(selected_states) > max_states:
+            #     current_states = selected_states[:max_states]
+            # self.save_tree_to_json(self.file_name)
 
         # if best_state is not None:
         #     solution = self.model.generate_solution(initial_prompt, best_state)
@@ -504,8 +505,8 @@ class MonteCarloTreeofThoughts(TreeofThoughts):
         #     solution = None
 
         # return None
-        print("\n\n\n\n\n\n\n\n\n\n\n")
-        print("Best State:", best_state)
-        print("\n\n\n\n\n\n\n\n\n\n\n")
-        solution = self.model.generate_solution(initial_prompt, best_state)
-        return solution if solution else best_state
+        # print("\n\n\n\n\n\n\n\n\n\n\n")
+        # print("Best State:", best_state)
+        # print("\n\n\n\n\n\n\n\n\n\n\n")
+        # solution = self.model.generate_solution(initial_prompt, best_state)
+        return thoughts
