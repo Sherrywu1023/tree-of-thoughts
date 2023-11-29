@@ -465,7 +465,7 @@ class MonteCarloTreeofThoughts(TreeofThoughts):
                 prompt_list.append(new_solution_str)
                 # print(new_solution_str)
                 
-                # time.sleep(1)
+                time.sleep(1)
                 # evaluated_thoughts = self.model.evaluate_states(
                 #     thoughts, initial_prompt
                 # )
