@@ -437,8 +437,9 @@ class MonteCarloTreeofThoughts(TreeofThoughts):
         best_state = None
         best_value = float("-inf")
 
+        prompt_len_list = []
+        prompt_list = []
         for step in range(1, max_steps + 1):
-            selected_states = []
 
             for state in current_states:
                 # if state in transposition_table:
@@ -448,6 +449,8 @@ class MonteCarloTreeofThoughts(TreeofThoughts):
                 thoughts = self.model.generate_thoughts(
                     state, num_thoughts, initial_prompt
                 )
+                prompt_len_list.append(len(thoughts))
+                prompt_list.append(thoughts)
                 print(thoughts)
                 # time.sleep(1)
                 # evaluated_thoughts = self.model.evaluate_states(
@@ -509,4 +512,6 @@ class MonteCarloTreeofThoughts(TreeofThoughts):
         # print("Best State:", best_state)
         # print("\n\n\n\n\n\n\n\n\n\n\n")
         # solution = self.model.generate_solution(initial_prompt, best_state)
-        return thoughts
+        max_len = max(prompt_len_list)
+        i = prompt_len_list.index(max_len)
+        return prompt_list[i]
