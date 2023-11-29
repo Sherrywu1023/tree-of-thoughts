@@ -449,9 +449,21 @@ class MonteCarloTreeofThoughts(TreeofThoughts):
                 thoughts = self.model.generate_thoughts(
                     state, num_thoughts, initial_prompt
                 )
-                prompt_len_list.append(len(thoughts))
-                prompt_list.append(thoughts)
-                print(thoughts)
+                solution_str = thoughts[0]
+                if "Solution" in solution_str:
+                    i = solution_str.index("Solution")
+                    new_solution_str = solution_str[:i]
+                elif "Therefore" in solution_str:
+                    i = solution_str.index("Therefore")
+                    new_solution_str = solution_str[:i]
+                elif "So" in solution_str:
+                    i = solution_str.index("So")
+                    new_solution_str = solution_str[:i]
+                else:
+                    new_solution_str = solution_str
+                prompt_len_list.append(len(new_solution_str))
+                prompt_list.append(new_solution_str)
+                print(new_solution_str)
                 # time.sleep(1)
                 # evaluated_thoughts = self.model.evaluate_states(
                 #     thoughts, initial_prompt
@@ -512,6 +524,7 @@ class MonteCarloTreeofThoughts(TreeofThoughts):
         # print("Best State:", best_state)
         # print("\n\n\n\n\n\n\n\n\n\n\n")
         # solution = self.model.generate_solution(initial_prompt, best_state)
+
         max_len = max(prompt_len_list)
         i = prompt_len_list.index(max_len)
         return prompt_list[i]
