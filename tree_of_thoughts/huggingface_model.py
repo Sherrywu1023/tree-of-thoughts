@@ -64,31 +64,4 @@ class HuggingLanguageModel:
 
         return state_values
 
-    def generate_solution(self, initial_prompt, state, rejected_solutions=None):
-        try:
-            if isinstance(state, list):
-                state_text = "\n".join(state)
-            else:
-                state_text = state
-
-            prompt = f"""You're an TreeofThoughts, an superintelligent AI model devoted to helping Humans by any means necessary. You're purpose is to generate a series of solutions to comply with the user's instructions, you must generate solutions on the basis of determining the most reliable solution in the shortest amount of time, while taking rejected solutions into account and learning from them. 
-            Considering the reasoning provided:\n\n
-            ###'{state_text}'\n\n###
-            Devise the best possible solution for the task: {initial_prompt}, Here are evaluated solutions that were rejected: 
-            ###{rejected_solutions}###, 
-            complete the {initial_prompt} without making the same mistakes you did with the evaluated rejected solutions. Be simple. Be direct. Provide intuitive solutions as soon as you think of them."""
-            return prompt
-        except Exception as e:
-            logger.error(f"Error in generate_solutions: {e}")
-            return None
-
-    # def generate_text(self, prompt: str, k: int = 3):
-    #     """Generate text from prompt using OpenAI API"""
-    #     if self.use_chat_api:
-    #         thoughts = []
-    #         for _ in range(k):
-    #             response = self.model(prompt)
-    #             thoughts += [response]
-    #             # print(f'thoughts: {thoughts}')
-    #         return thoughts
 

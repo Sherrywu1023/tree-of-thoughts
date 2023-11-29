@@ -113,11 +113,11 @@ class OpenAILanguageModel(AbstractLanguageModel):
             Devise the best possible solution for the task: {initial_prompt}, Here are evaluated solutions that were rejected: 
             ###{rejected_solutions}###, 
             complete the {initial_prompt} without making the same mistakes you did with the evaluated rejected solutions. Be simple. Be direct. Provide intuitive solutions as soon as you think of them."""
-            answer = self.generate_text(prompt, 1)
-            print(f"Answerrrrrr {answer}")
+            # answer = self.generate_text(prompt, 1)
+            print(f"Question {prompt}")
             # print(thoughts)
             # print(f"General Solution : {answer}")
-            return answer
+            return prompt
         except Exception as e:
             logger.error(f"Error in generate_solutions: {e}")
             return None
