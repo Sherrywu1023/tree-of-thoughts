@@ -459,6 +459,7 @@ class MonteCarloTreeofThoughts(TreeofThoughts):
                             if isinstance(state, str)
                             else (*state, thought)
                         )
+                        print("VALUE IS:", str(value))
                         transposition_table[flattened_state] = value
 
                 for thought, value in evaluated_thoughts.items():
