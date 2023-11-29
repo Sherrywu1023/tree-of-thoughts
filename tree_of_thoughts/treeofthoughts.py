@@ -468,7 +468,7 @@ class MonteCarloTreeofThoughts(TreeofThoughts):
                         if isinstance(state, str)
                         else (*state, thought)
                     )
-
+                    print("FLATTENED STATE IS",str(flattened_state))
                     if flattened_state not in visit_counts:
                         visit_counts[flattened_state] = 0
 
