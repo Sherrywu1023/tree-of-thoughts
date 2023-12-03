@@ -120,8 +120,8 @@ class OpenAILanguageModel(AbstractLanguageModel):
             return None
 
     def evaluate_states(self, states, initial_prompt):
-        # if not states:
-        #     return {}
+        if not states:
+            return {}
 
         if self.evaluation_strategy == "value":
             state_values = {}
@@ -130,41 +130,19 @@ class OpenAILanguageModel(AbstractLanguageModel):
                     state_text = state
                 else:
                     state_text = "\n".join(state)
-            print(
-                "We receive a state of type",
-                type(state),
-                "For state: ",
-                state,
-                "\n\n",
-            )
+                print(
+                    "We receive a state of type",
+                    type(state),
+                    "For state: ",
+                    state,
+                    "\n\n",
+                )
                 prompt = f""" To achieve the following goal: '{initial_prompt}', pessimistically value the context of the past solutions and more importantly the latest generated solution you had AS A FLOAT BETWEEN 0 AND 1\n
                     Past solutions:\n\n
                     {state_text}\n       
                     If the solutions is not directly concretely making fast progress in achieving the goal, give it a lower score.
                     Evaluate all solutions AS A FLOAT BETWEEN 0 and 1:\n,  DO NOT RETURN ANYTHING ELSE
                 """
-                if self.verbose:
-                    print(f"Evaluating state: {state_text}")
-
-                try:
-                    value_text = self.model(prompt)
-                    value = float(value_text)
-                except ValueError:
-                    if self.verbose:
-                        print(
-                            "Error converting value to float for state:"
-                            f" {state_text}"
-                        )
-                    value = 0  # Assign a default value if the conversion fails
-                except Exception as e:
-                    if self.verbose:
-                        print(f"Error evaluating state: {state_text}")
-                        print(f"Error: {e}")
-                    value = 0
-
-                state_values[state] = value
-
-        return state
 
                 response = self.openai_api_call_handler(prompt, 10, 1)
                 try:
@@ -175,7 +153,7 @@ class OpenAILanguageModel(AbstractLanguageModel):
                     value = float(value_text)
                     print(f"Evaluated Thought Value: {value}")
                 except ValueError:
-                value = 0  # Assign a default value if the conversion fails
+                    value = 0  # Assign a default value if the conversion fails
                 state_values[state] = value
             return state_values
 
